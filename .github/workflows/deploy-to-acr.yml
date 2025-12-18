@@ -36,7 +36,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
-          tags: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/techworkshop-l300:latest
+          tags: ${{ secrets.AZURE_CONTAINER_REGISTRY }}/chat-app:latest
 
       - name: Remove .env file
         run: rm .env
