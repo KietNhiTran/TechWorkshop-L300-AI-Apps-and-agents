@@ -1,0 +1,87 @@
+@startuml
+!theme plain
+skinparam backgroundColor #f8fafc
+skinparam defaultFontSize 11
+
+package "FastAPI Application Layer" #e0e7ff {
+  rectangle "main.py\n**FastAPI App**" as Main #6366f1 {
+    [Web UI\ntemplates/index.html]
+    [Static Files\n(CSS/JS)]
+    [Health Endpoint]
+    [Lifespan Management]
+  }
+}
+
+package "API Interface Layer" #f0fdf4 {
+  rectangle "Chat API\n**/api/chat**\napi/chat.py" as ChatAPI #10b981 {
+    [POST /message\nNon-streaming]
+    [POST /stream\nSSE Streaming]
+    [Session Management]
+  }
+  
+  rectangle "A2A Server\n**/a2a**\nagent/a2a_server.py" as A2A #8b5cf6 {
+    [GET /agent-card/\nDiscovery]
+    [POST /run\nTask Execution]
+    [Event Queue\nStreaming]
+  }
+}
+
+package "Agent Execution Layer" #fef3c7 {
+  rectangle "Agent Executor\nagent_executor.py" as Executor #f59e0b {
+    [SemanticKernelProduct\nManagementExecutor]
+    [Task Lifecycle]
+    [Event Publishing]
+  }
+}
+
+package "Semantic Kernel Layer" #fce7f3 {
+  rectangle "SK Agent\nproduct_management_agent.py" as SKAgent #ec4899 {
+    [ChatCompletionAgent]
+    [Product Catalog Plugin]
+    [get_product_info()]
+    [rank_products()]
+    [Conversation History]
+  }
+}
+
+cloud "Azure Services" #dbeafe {
+  database "Azure OpenAI\nGPT Model" as AzureAI #3b82f6
+}
+
+Main -down-> ChatAPI : mounts /api
+Main -down-> A2A : mounts /a2a
+
+ChatAPI -down-> Executor : invokes
+A2A -down-> Executor : invokes via\nRequestContext
+
+Executor -down-> SKAgent : executes\nwith EventQueue
+
+SKAgent -down-> AzureAI : API calls\n(Managed Identity)
+
+note right of ChatAPI
+  **Human-Facing Interface**
+  • REST API endpoints
+  • Server-Sent Events (SSE)
+  • Session-based chat
+end note
+
+note right of A2A
+  **Agent-Facing Interface**
+  • A2A Protocol compliant
+  • Agent Card discovery
+  • Task-based execution
+  • Event-driven streaming
+end note
+
+note bottom of SKAgent
+  **Authentication:**
+  • DefaultAzureCredential
+  • Managed Identity support
+  • API Key fallback
+  
+  **Plugins:**
+  • Product information lookup
+  • Product ranking by criteria
+end note
+
+@enduml

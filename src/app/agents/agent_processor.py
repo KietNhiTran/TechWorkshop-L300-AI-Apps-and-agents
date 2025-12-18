@@ -21,15 +21,15 @@ from azure.ai.agents.telemetry import trace_function
 import asyncio
 from concurrent.futures import ThreadPoolExecutor
 import time
-# from opentelemetry.instrumentation.openai_v2 import OpenAIInstrumentor
+from opentelemetry.instrumentation.openai_v2 import OpenAIInstrumentor
 
 # # Enable Azure Monitor tracing
 application_insights_connection_string = os.environ["APPLICATIONINSIGHTS_CONNECTION_STRING"]
-# configure_azure_monitor(connection_string=application_insights_connection_string)
-# OpenAIInstrumentor().instrument()
+configure_azure_monitor(connection_string=application_insights_connection_string)
+OpenAIInstrumentor().instrument()
 
 # scenario = os.path.basename(__file__)
-# tracer = trace.get_tracer(__name__)
+tracer = trace.get_tracer(__name__)
 
 # Increase thread pool size for better concurrency
 _executor = ThreadPoolExecutor(max_workers=8)

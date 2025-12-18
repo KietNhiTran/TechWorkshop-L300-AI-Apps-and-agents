@@ -20,6 +20,7 @@ env/
 venv/
 ENV/
 .Python
+.env
 
 # Node
 node_modules/
