@@ -32,8 +32,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest .
-          docker push ${{ env.AZURE_CONTAINER_REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker build -t ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/chat-app:latest .
+          docker push ${{ secrets.AZURE_CONTAINER_REGISTRY }}.azurecr.io/chat-app:latest
 
       - name: Remove .env file
         run: rm .env
